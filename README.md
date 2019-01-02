@@ -1,4 +1,4 @@
-RavenDark Core 0.1.0
+RavenDark Core 0.2.0
 ===============================
 
 
@@ -15,6 +15,15 @@ The blockchain is based on Dash with the X16r algorithm from Ravencoin.
 For more information, as well as an immediately useable, binary version of
 the RavenDark Core software, see http://raven-dark.com/.
 
+
+Build and Run with Docker
+----------------
+
+build:
+`docker build -t ravendark .`
+
+run:
+`docker run -p 6666:6666 -p 6665:6665 -d -v ~/.ravendark:/root/.ravendark --name ravendark ravendark:latest`
 
 License
 -------
