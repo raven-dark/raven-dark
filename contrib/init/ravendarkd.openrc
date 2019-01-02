@@ -1,0 +1,92 @@
+#!/sbin/runscript
+
+# backward compatibility for existing gentoo layout 
+#
+if [ -d "/var/lib/ravendarkcore/.ravendarkcore" ]; then
+	RAVENDARKD_DEFAULT_DATADIR="/var/lib/ravendarkcore/.ravendarkcore"
+else
+	RAVENDARKD_DEFAULT_DATADIR="/var/lib/ravendarkd"
+fi
+
+RAVENDARKD_CONFIGFILE=${RAVENDARKD_CONFIGFILE:-/etc/ravendarkcore/ravendark.conf}
+RAVENDARKD_PIDDIR=${RAVENDARKD_PIDDIR:-/var/run/ravendarkd}
+RAVENDARKD_PIDFILE=${RAVENDARKD_PIDFILE:-${RAVENDARKD_PIDDIR}/ravendarkd.pid}
+RAVENDARKD_DATADIR=${RAVENDARKD_DATADIR:-${RAVENDARKD_DEFAULT_DATADIR}}
+RAVENDARKD_USER=${RAVENDARKD_USER:-${RAVENDARK_USER:-ravendarkcore}}
+RAVENDARKD_GROUP=${RAVENDARKD_GROUP:-ravendarkcore}
+RAVENDARKD_BIN=${RAVENDARKD_BIN:-/usr/bin/ravendarkd}
+RAVENDARKD_NICE=${RAVENDARKD_NICE:-${NICELEVEL:-0}}
+RAVENDARKD_OPTS="${RAVENDARKD_OPTS:-${RAVENDARK_OPTS}}"
+
+name="RavenDark Core Daemon"
+description="RavenDark cryptocurrency P2P network daemon"
+
+command="/usr/bin/ravendarkd"
+command_args="-pid=\"${RAVENDARKD_PIDFILE}\" \
+		-conf=\"${RAVENDARKD_CONFIGFILE}\" \
+		-datadir=\"${RAVENDARKD_DATADIR}\" \
+		-daemon \
+		${RAVENDARKD_OPTS}"
+
+required_files="${RAVENDARKD_CONFIGFILE}"
+start_stop_daemon_args="-u ${RAVENDARKD_USER} \
+			-N ${RAVENDARKD_NICE} -w 2000"
+pidfile="${RAVENDARKD_PIDFILE}"
+
+# The retry schedule to use when stopping the daemon. Could be either
+# a timeout in seconds or multiple signal/timeout pairs (like
+# "SIGKILL/180 SIGTERM/300")
+retry="${RAVENDARKD_SIGTERM_TIMEOUT}"
+
+depend() {
+	need localmount net
+}
+
+# verify
+# 1) that the datadir exists and is writable (or create it)
+# 2) that a directory for the pid exists and is writable
+# 3) ownership and permissions on the config file
+start_pre() {
+	checkpath \
+	-d \
+	--mode 0750 \
+	--owner "${RAVENDARKD_USER}:${RAVENDARKD_GROUP}" \
+	"${RAVENDARKD_DATADIR}"
+
+	checkpath \
+	-d \
+	--mode 0755 \
+	--owner "${RAVENDARKD_USER}:${RAVENDARKD_GROUP}" \
+	"${RAVENDARKD_PIDDIR}"
+
+	checkpath -f \
+	-o ${RAVENDARKD_USER}:${RAVENDARKD_GROUP} \
+	-m 0660 \
+	${RAVENDARKD_CONFIGFILE}
+
+	checkconfig || return 1
+}
+
+checkconfig()
+{
+	if ! grep -qs '^rpcpassword=' "${RAVENDARKD_CONFIGFILE}" ; then
+		eerror ""
+		eerror "ERROR: You must set a secure rpcpassword to run ravendarkd."
+		eerror "The setting must appear in ${RAVENDARKD_CONFIGFILE}"
+		eerror ""
+		eerror "This password is security critical to securing wallets "
+		eerror "and must not be the same as the rpcuser setting."
+		eerror "You can generate a suitable random password using the following"
+		eerror "command from the shell:"
+		eerror ""
+		eerror "bash -c 'tr -dc a-zA-Z0-9 < /dev/urandom | head -c32 && echo'"
+		eerror ""
+		eerror "It is also recommended that you also set alertnotify so you are "
+		eerror "notified of problems:"
+		eerror ""
+		eerror "ie: alertnotify=echo %%s | mail -s \"RavenDark Core Alert\"" \
+			"admin@foo.com"
+		eerror ""
+		return 1
+	fi
+}

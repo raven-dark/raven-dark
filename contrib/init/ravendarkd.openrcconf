@@ -1,0 +1,33 @@
+# /etc/conf.d/ravendarkd: config file for /etc/init.d/ravendarkd
+
+# Config file location
+#RAVENDARKD_CONFIGFILE="/etc/ravendarkcore/ravendark.conf"
+
+# What directory to write pidfile to?  (created and owned by $RAVENDARKD_USER)
+#RAVENDARKD_PIDDIR="/var/run/ravendarkd"
+
+# What filename to give the pidfile
+#RAVENDARKD_PIDFILE="${RAVENDARKD_PIDDIR}/ravendarkd.pid"
+
+# Where to write ravendarkd data (be mindful that the blockchain is large)
+#RAVENDARKD_DATADIR="/var/lib/ravendarkd"
+
+# User and group to own ravendarkd process
+#RAVENDARKD_USER="ravendarkcore"
+#RAVENDARKD_GROUP="ravendarkcore"
+
+# Path to ravendarkd executable
+#RAVENDARKD_BIN="/usr/bin/ravendarkd"
+
+# Nice value to run ravendarkd under
+#RAVENDARKD_NICE=0
+
+# Additional options (avoid -conf and -datadir, use flags above)
+RAVENDARKD_OPTS="-disablewallet"
+
+# The timeout in seconds OpenRC will wait for ravendarkd to terminate
+# after a SIGTERM has been raised.
+# Note that this will be mapped as argument to start-stop-daemon's
+# '--retry' option, which means you can specify a retry schedule
+# here. For more information see man 8 start-stop-daemon.
+RAVENDARKD_SIGTERM_TIMEOUT=60

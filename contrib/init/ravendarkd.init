@@ -1,0 +1,67 @@
+#!/bin/bash
+#
+#  ravendarkd The RavenDark Core server.
+#
+#
+# chkconfig: 345 80 20
+# description: ravendarkd
+# processname: ravendarkd
+#
+
+# Source function library.
+. /etc/init.d/functions
+
+# you can override defaults in /etc/sysconfig/ravendarkd, see below
+if [ -f /etc/sysconfig/ravendarkd ]; then
+        . /etc/sysconfig/ravendarkd
+fi
+
+RETVAL=0
+
+prog=ravendarkd
+# you can override the lockfile via RAVENDARKD_LOCKFILE in /etc/sysconfig/ravendarkd
+lockfile=${RAVENDARKD_LOCKFILE-/var/lock/subsys/ravendarkd}
+
+# ravendarkd defaults to /usr/bin/ravendarkd, override with RAVENDARKD_BIN
+ravendarkd=${RAVENDARKD_BIN-/usr/bin/ravendarkd}
+
+# ravendarkd opts default to -disablewallet, override with RAVENDARKD_OPTS
+ravendarkd_opts=${RAVENDARKD_OPTS--disablewallet}
+
+start() {
+    echo -n $"Starting $prog: "
+    daemon $DAEMONOPTS $ravendarkd $ravendarkd_opts
+    RETVAL=$?
+    echo
+    [ $RETVAL -eq 0 ] && touch $lockfile
+    return $RETVAL
+}
+
+stop() {
+    echo -n $"Stopping $prog: "
+    killproc $prog
+    RETVAL=$?
+    echo
+    [ $RETVAL -eq 0 ] && rm -f $lockfile
+    return $RETVAL
+}
+
+case "$1" in
+    start)
+        start
+        ;;
+    stop)
+        stop
+        ;;
+    status)
+        status $prog
+        ;;
+    restart)
+        stop
+        start
+        ;;
+    *)
+        echo "Usage: service $prog {start|stop|status|restart}"
+        exit 1
+        ;;
+esac

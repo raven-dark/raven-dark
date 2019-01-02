@@ -1,0 +1,20 @@
+<!DOCTYPE RCC><RCC version="1.0">
+    <qresource prefix="/translations">
+        <file alias="bg">locale/ravendark_bg.qm</file>
+        <file alias="de">locale/ravendark_de.qm</file>
+        <file alias="en">locale/ravendark_en.qm</file>
+        <file alias="es">locale/ravendark_es.qm</file>
+        <file alias="fi">locale/ravendark_fi.qm</file>
+        <file alias="fr">locale/ravendark_fr.qm</file>
+        <file alias="it">locale/ravendark_it.qm</file>
+        <file alias="ja">locale/ravendark_ja.qm</file>
+        <file alias="pl">locale/ravendark_pl.qm</file>
+        <file alias="pt">locale/ravendark_pt.qm</file>
+        <file alias="ru">locale/ravendark_ru.qm</file>
+        <file alias="sk">locale/ravendark_sk.qm</file>
+        <file alias="sv">locale/ravendark_sv.qm</file>
+        <file alias="vi">locale/ravendark_vi.qm</file>
+        <file alias="zh_CN">locale/ravendark_zh_CN.qm</file>
+        <file alias="zh_TW">locale/ravendark_zh_TW.qm</file>
+    </qresource>
+</RCC>

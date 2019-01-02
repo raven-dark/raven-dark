@@ -1,0 +1,12 @@
+[Desktop Entry]
+Encoding=UTF-8
+Name=RavenDark
+Comment=RavenDark P2P Cryptocurrency
+Comment[fr]=RavenDark, monnaie virtuelle cryptographique pair à pair
+Comment[tr]=RavenDark, eşten eşe kriptografik sanal para birimi
+Exec=ravendark-qt %u
+Terminal=false
+Type=Application
+Icon=ravendark128
+MimeType=x-scheme-handler/ravendark;
+Categories=Office;Finance;

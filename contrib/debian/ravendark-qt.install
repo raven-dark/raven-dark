@@ -1,0 +1,6 @@
+usr/local/bin/ravendark-qt usr/bin
+share/pixmaps/ravendark32.xpm usr/share/pixmaps
+share/pixmaps/ravendark16.xpm usr/share/pixmaps
+share/pixmaps/ravendark128.png usr/share/pixmaps
+debian/ravendark-qt.desktop usr/share/applications
+debian/ravendark-qt.protocol usr/share/kde4/services/
