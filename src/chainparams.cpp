@@ -55,7 +55,7 @@ static CBlock CreateGenesisBlock(const char* pszTimestamp, const CScript& genesi
  */
 static CBlock CreateGenesisBlock(uint32_t nTime, uint32_t nNonce, uint32_t nBits, int32_t nVersion, const CAmount& genesisReward)
 {
-    const char* pszTimestamp = "The WSJ 28/Dec/2018 Once a Rebel, Bitcoin Is Conforming to Mainstream Markets";
+    const char* pszTimestamp = "CNN 03/Jan/2019 US national debt reaches a new high";
     const CScript genesisOutputScript = CScript() << ParseHex("046664710fa689ad5023690c80f3a49c8f13f8d45b8c857fbcbc8bc4a8e4d3eb4b10f4d4604fa08dce601aaf0f470216fe1b51850b4acf21b179c45070ac7b03a9") << OP_CHECKSIG;
     return CreateGenesisBlock(pszTimestamp, genesisOutputScript, nTime, nNonce, nBits, nVersion, genesisReward);
 }
@@ -102,13 +102,13 @@ public:
         consensus.nZawyLwmaAveragingWindow = 65;
         consensus.nZawyLwmaAjustedWeight = 3927;
 
-        consensus.nPowTargetTimespan = 60 * 60; // RavenDark: 1 hour
-        consensus.nPowTargetSpacing = 60; // RavenDark: 1 minute
+        consensus.nPowTargetTimespan = 60 * 60 * 12; // RavenDark: 1 hour
+        consensus.nPowTargetSpacing = 15; // RavenDark: 1 minute
         consensus.fPowAllowMinDifficultyBlocks = false;
         consensus.fPowNoRetargeting = false;
         consensus.useDarkGravityWave = false;
-        consensus.nRuleChangeActivationThreshold = 1916; // 95% of 2016
-        consensus.nMinerConfirmationWindow = 2016; // nPowTargetTimespan / nPowTargetSpacing
+        consensus.nRuleChangeActivationThreshold = 114; // 95% of 120
+        consensus.nMinerConfirmationWindow = 120; // nPowTargetTimespan / nPowTargetSpacing
         consensus.vDeployments[Consensus::DEPLOYMENT_TESTDUMMY].bit = 28;
         consensus.vDeployments[Consensus::DEPLOYMENT_TESTDUMMY].nStartTime = 1199145601; // January 1, 2008
         consensus.vDeployments[Consensus::DEPLOYMENT_TESTDUMMY].nTimeout = 1230767999; // December 31, 2008
@@ -142,7 +142,7 @@ public:
          * The characters are rarely used upper ASCII, not valid as UTF-8, and produce
          * a large 32-bit integer with any alignment.
          */
-        pchMessageStart[0] = 0xb0;
+        pchMessageStart[0] = 0xb1;
         pchMessageStart[1] = 0xa6;
         pchMessageStart[2] = 0xd7;
         pchMessageStart[3] = 0xde;
@@ -152,11 +152,11 @@ public:
         nDelayGetHeadersTime = 24 * 60 * 60;
         nPruneAfterHeight = 100000;
 
-        genesis = CreateGenesisBlock(1546282468, 734419, 0x1e0ffff0, 1, 200 * COIN);
+        genesis = CreateGenesisBlock(1546561220, 444152, 0x1e0ffff0, 1, 200 * COIN);
         consensus.hashGenesisBlock = genesis.GetHash();
 
-        assert(consensus.hashGenesisBlock == uint256S("0x00000b56df27ce7affa3c0c4959e33ea4386167ebc50561c91588f83770adacd"));
-        assert(genesis.hashMerkleRoot == uint256S("0x4f57b0024638dbb43c50f6145fe46fd303f3cb5528a1ab285c3d7b73305d21d2"));
+        assert(consensus.hashGenesisBlock == uint256S("0x0000056e8fc8f3afd127c3ef59a3e397d8475ca00a9574da3cfaee0840258b0f"));
+        assert(genesis.hashMerkleRoot == uint256S("0xc23e64fd1970722cd7118db4ff7bbbcb6904f7881560a293841a931e3be7526d"));
 
         vSeeds.push_back(CDNSSeedData("seed0_ravendark", "seed0.raven-dark.com"));
         vSeeds.push_back(CDNSSeedData("seed1_ravendark", "seed1.raven-dark.com"));
@@ -164,9 +164,11 @@ public:
         // vFixedSeeds.clear();
         // vSeeds.clear();
 
+        // RavenDark addresses start with 'R'
         base58Prefixes[PUBKEY_ADDRESS] = std::vector<unsigned char>(1,60);
         base58Prefixes[SCRIPT_ADDRESS] = std::vector<unsigned char>(1,122);
-        base58Prefixes[SECRET_KEY] =     std::vector<unsigned char>(1,128);
+        // RavenDark private keys start with 't'
+        base58Prefixes[SECRET_KEY] =     std::vector<unsigned char>(1,23 + 128);
         // RavenDark BIP32 pubkeys start with 'xpub' (RavenDark defaults)
         base58Prefixes[EXT_PUBLIC_KEY] = boost::assign::list_of(0x04)(0x88)(0xB2)(0x1E).convert_to_container<std::vector<unsigned char> >();
         // RavenDark BIP32 prvkeys start with 'xprv' (RavenDark defaults)
@@ -177,10 +179,10 @@ public:
 
         vFixedSeeds = std::vector<SeedSpec6>(pnSeed6_main, pnSeed6_main + ARRAYLEN(pnSeed6_main));
 
-        fMiningRequiresPeers = true;
+        fMiningRequiresPeers = false; // change back to true
         fDefaultConsistencyChecks = false;
-        fRequireStandard = true;
-        fMineBlocksOnDemand = false;
+        fRequireStandard = false;
+        fMineBlocksOnDemand = true; // change back to false
         fTestnetToBeDeprecatedFieldRPC = false;
 
         nPoolMaxTransactions = 3;
@@ -189,8 +191,8 @@ public:
 
         checkpointData = (CCheckpointData) {
             boost::assign::map_list_of
-            (0, uint256S("0000043c6374e2da57aca089e7a5110f7848349c44a4522c3066ba1abf126633")),
-            1535284800, // * UNIX timestamp of last checkpoint block
+            (0, uint256S("0000056e8fc8f3afd127c3ef59a3e397d8475ca00a9574da3cfaee0840258b0f")),
+            1546561220, // * UNIX timestamp of last checkpoint block
             0,    // * total number of transactions between genesis and last checkpoint
                   //   (the tx=... number in the SetBestChain debug.log lines)
             500   // * estimated number of transactions per day after checkpoint
@@ -210,7 +212,7 @@ public:
     CTestNetParams() {
         strNetworkID = "test";
         consensus.nSubsidyHalvingInterval = 21600;
-        consensus.nMasternodePaymentsStartBlock = 2000; // not true, but it's ok as long as it's less then nMasternodePaymentsIncreaseBlock
+        consensus.nMasternodePaymentsStartBlock = 500; // not true, but it's ok as long as it's less then nMasternodePaymentsIncreaseBlock
         consensus.nMasternodePaymentsIncreaseBlock = 9999;
         consensus.nMasternodePaymentsIncreasePeriod = 9999;
         consensus.nInstantSendKeepLock = 6;
@@ -233,8 +235,8 @@ public:
         consensus.nZawyLwmaAveragingWindow = 65;
         consensus.nZawyLwmaAjustedWeight = 3927;
 
-        consensus.nPowTargetTimespan = 60 * 60; // RavenDark: 1 hour
-        consensus.nPowTargetSpacing = 60; // RavenDark: 1 minute
+        consensus.nPowTargetTimespan = 60 * 60 * 6; // RavenDark: 6 hours
+        consensus.nPowTargetSpacing = 30; // RavenDark: 30 seconds
         consensus.fPowAllowMinDifficultyBlocks = true;
         consensus.fPowNoRetargeting = false;
         consensus.useDarkGravityWave = false;
@@ -262,17 +264,17 @@ public:
         // By default assume that the signatures in ancestors of this block are valid.
         consensus.defaultAssumeValid = uint256S("0x00");
 
-        pchMessageStart[0] = 0xa1;
-        pchMessageStart[1] = 0xbe;
-        pchMessageStart[2] = 0xc6;
-        pchMessageStart[3] = 0xd0;
+        pchMessageStart[0] = 0xb2;
+        pchMessageStart[1] = 0xa5;
+        pchMessageStart[2] = 0xd6;
+        pchMessageStart[3] = 0xdd;
         vAlertPubKey = ParseHex("046666710fa689ad5023690c80f3a49c8f13f8d45b8c857fbcbc8bc4a8e4d3eb4b10f4d4604fa08dce601aaf0f470216fe1b51850b4acf21b179c45070ac7b03a9");
         nDefaultPort = 16666;
         nMaxTipAge = 0x7fffffff; // allow mining on top of old blocks for testnet
         nDelayGetHeadersTime = 24 * 60 * 60;
         nPruneAfterHeight = 1000;
 
-        genesis = CreateGenesisBlock(1535284800UL, 155965UL, 0x1e0ffff0, 1, 150000 * COIN);
+        genesis = CreateGenesisBlock(1546282468, 734419, 0x1e0ffff0, 1, 200 * COIN);
 
         consensus.hashGenesisBlock = genesis.GetHash();
         //assert(consensus.hashGenesisBlock == uint256S("0x0x8efde483cc07f2076b04d42f05ee6a12f0b5c57a058bd9e56635ff9794f42f78"));

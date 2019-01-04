@@ -13,9 +13,6 @@ RUN apt-get update && apt-get install -y \
   libssl-dev \
   wget
 
-RUN curl -sL https://deb.nodesource.com/setup_6.x | sudo -E bash -
-RUN apt-get install -y nodejs
-
 RUN apt-get install -y \
   libtool \
   autotools-dev \
@@ -42,10 +39,13 @@ COPY . /ravendark
 WORKDIR /ravendark
 
 RUN ./autogen.sh && \
- ./configure --without-gui && make -j2
+ ./configure --without-gui && make
+
+RUN ln -sf /ravendark/src/ravendarkd /usr/bin/ravendarkd
+RUN ln -sf /ravendark/src/ravendark-cli /usr/bin/ravendark-cli
 
 EXPOSE 6666 6665
 
-VOLUME /root/.ravendark
+VOLUME /root/.ravendarkcore
 
-CMD /ravendark/src/ravendarkd
+CMD ravendarkd
