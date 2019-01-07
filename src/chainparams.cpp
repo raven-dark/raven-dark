@@ -102,13 +102,13 @@ public:
         consensus.nZawyLwmaAveragingWindow = 65;
         consensus.nZawyLwmaAjustedWeight = 3927;
 
-        consensus.nPowTargetTimespan = 60 * 60 * 12; // RavenDark: 1 hour
-        consensus.nPowTargetSpacing = 15; // RavenDark: 1 minute
+        consensus.nPowTargetTimespan = 60 * 60; // RavenDark: 1 hour
+        consensus.nPowTargetSpacing = 60; // RavenDark: 1 minute
         consensus.fPowAllowMinDifficultyBlocks = false;
         consensus.fPowNoRetargeting = false;
         consensus.useDarkGravityWave = false;
-        consensus.nRuleChangeActivationThreshold = 114; // 95% of 120
-        consensus.nMinerConfirmationWindow = 120; // nPowTargetTimespan / nPowTargetSpacing
+        consensus.nRuleChangeActivationThreshold = 57; // 95% of 60
+        consensus.nMinerConfirmationWindow = 60; // nPowTargetTimespan / nPowTargetSpacing
         consensus.vDeployments[Consensus::DEPLOYMENT_TESTDUMMY].bit = 28;
         consensus.vDeployments[Consensus::DEPLOYMENT_TESTDUMMY].nStartTime = 1199145601; // January 1, 2008
         consensus.vDeployments[Consensus::DEPLOYMENT_TESTDUMMY].nTimeout = 1230767999; // December 31, 2008
@@ -179,10 +179,10 @@ public:
 
         vFixedSeeds = std::vector<SeedSpec6>(pnSeed6_main, pnSeed6_main + ARRAYLEN(pnSeed6_main));
 
-        fMiningRequiresPeers = false; // change back to true
+        fMiningRequiresPeers = true;
         fDefaultConsistencyChecks = false;
         fRequireStandard = false;
-        fMineBlocksOnDemand = true; // change back to false
+        fMineBlocksOnDemand = false;
         fTestnetToBeDeprecatedFieldRPC = false;
 
         nPoolMaxTransactions = 3;
@@ -195,7 +195,7 @@ public:
             1546561220, // * UNIX timestamp of last checkpoint block
             0,    // * total number of transactions between genesis and last checkpoint
                   //   (the tx=... number in the SetBestChain debug.log lines)
-            500   // * estimated number of transactions per day after checkpoint
+            86400   // * estimated number of transactions per day after checkpoint
         };
     }
 };

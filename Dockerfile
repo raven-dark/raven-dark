@@ -11,14 +11,11 @@ RUN apt-get update && apt-get install -y \
   curl \
   build-essential \
   libssl-dev \
-  wget
-
-RUN apt-get install -y \
+  wget \
   libtool \
   autotools-dev \
   automake \
   pkg-config \
-  libssl-dev \
   libevent-dev \
   bsdmainutils \
   git
@@ -37,6 +34,7 @@ RUN apt-get install -y \
 
 COPY . /ravendark
 WORKDIR /ravendark
+RUN chmod -R 777 .
 
 RUN ./autogen.sh && \
  ./configure --without-gui && make
