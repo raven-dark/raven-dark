@@ -25,7 +25,15 @@ config.status
 libtool
 .deps/
 .dirstamp
-build-aux/
+build-aux/m4/*.m4
+!build-aux/m4/ax_prog_cc_for_build.m4
+build-aux/compile
+build-aux/config.*
+build-aux/depcomp
+build-aux/install-sh
+build-aux/ltmain.sh
+build-aux/missing
+build-aux/test-driver
 *.lo
 *.o
 *~
