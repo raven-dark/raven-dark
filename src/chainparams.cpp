@@ -232,7 +232,7 @@ public:
         consensus.BIP34Hash = uint256S("0x0000047d24635e347be3aaaeb66c26be94901a2f962feccd4f95090191f208c1");
         consensus.powLimit = uint256S("00000fffff000000000000000000000000000000000000000000000000000000");
 
-        consensus.nZawyLwmaAveragingWindow = 65;
+        consensus.nZawyLwmaAveragingWindow = 45;
         consensus.nZawyLwmaAjustedWeight = 3927;
 
         consensus.nPowTargetTimespan = 60 * 30; // RavenDark: 30 minutes
@@ -241,7 +241,7 @@ public:
         consensus.fPowNoRetargeting = false;
         consensus.useDarkGravityWave = false;
         consensus.nRuleChangeActivationThreshold = 45; // 75% for testchains
-        consensus.nMinerConfirmationWindow = 60; // nPowTargetTimespan / nPowTargetSpacing
+        consensus.nMinerConfirmationWindow = 30; // nPowTargetTimespan / nPowTargetSpacing
         consensus.vDeployments[Consensus::DEPLOYMENT_TESTDUMMY].bit = 28;
         consensus.vDeployments[Consensus::DEPLOYMENT_TESTDUMMY].nStartTime = 1199145601; // January 1, 2008
         consensus.vDeployments[Consensus::DEPLOYMENT_TESTDUMMY].nTimeout = 1230767999; // December 31, 2008
