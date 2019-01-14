@@ -158,9 +158,9 @@ public:
         assert(consensus.hashGenesisBlock == uint256S("0x0000056e8fc8f3afd127c3ef59a3e397d8475ca00a9574da3cfaee0840258b0f"));
         assert(genesis.hashMerkleRoot == uint256S("0xc23e64fd1970722cd7118db4ff7bbbcb6904f7881560a293841a931e3be7526d"));
 
-        vSeeds.push_back(CDNSSeedData("seed0_ravendark", "seed0.raven-dark.com"));
-        vSeeds.push_back(CDNSSeedData("seed1_ravendark", "seed1.raven-dark.com"));
-        vSeeds.push_back(CDNSSeedData("seed2_ravendark", "seed2.raven-dark.com"));
+        vSeeds.push_back(CDNSSeedData("seed0_ravendark", "seed.raven-dark.com"));
+        vSeeds.push_back(CDNSSeedData("seed1_ravendark", "seed2.raven-dark.com"));
+        vSeeds.push_back(CDNSSeedData("seed2_ravendark", "explorer.raven-dark.com"));
         // vFixedSeeds.clear();
         // vSeeds.clear();
 
@@ -235,13 +235,13 @@ public:
         consensus.nZawyLwmaAveragingWindow = 65;
         consensus.nZawyLwmaAjustedWeight = 3927;
 
-        consensus.nPowTargetTimespan = 60 * 60 * 6; // RavenDark: 6 hours
+        consensus.nPowTargetTimespan = 60 * 30; // RavenDark: 30 minutes
         consensus.nPowTargetSpacing = 30; // RavenDark: 30 seconds
         consensus.fPowAllowMinDifficultyBlocks = true;
         consensus.fPowNoRetargeting = false;
         consensus.useDarkGravityWave = false;
-        consensus.nRuleChangeActivationThreshold = 1512; // 75% for testchains
-        consensus.nMinerConfirmationWindow = 2016; // nPowTargetTimespan / nPowTargetSpacing
+        consensus.nRuleChangeActivationThreshold = 45; // 75% for testchains
+        consensus.nMinerConfirmationWindow = 60; // nPowTargetTimespan / nPowTargetSpacing
         consensus.vDeployments[Consensus::DEPLOYMENT_TESTDUMMY].bit = 28;
         consensus.vDeployments[Consensus::DEPLOYMENT_TESTDUMMY].nStartTime = 1199145601; // January 1, 2008
         consensus.vDeployments[Consensus::DEPLOYMENT_TESTDUMMY].nTimeout = 1230767999; // December 31, 2008
@@ -274,23 +274,22 @@ public:
         nDelayGetHeadersTime = 24 * 60 * 60;
         nPruneAfterHeight = 1000;
 
-        genesis = CreateGenesisBlock(1546282468, 734419, 0x1e0ffff0, 1, 200 * COIN);
+        genesis = CreateGenesisBlock(1546561220, 444152, 0x1e0ffff0, 1, 200 * COIN);
 
         consensus.hashGenesisBlock = genesis.GetHash();
         //assert(consensus.hashGenesisBlock == uint256S("0x0x8efde483cc07f2076b04d42f05ee6a12f0b5c57a058bd9e56635ff9794f42f78"));
         //assert(genesis.hashMerkleRoot == uint256S("0xd5dec0980d7b84cc1c048eb8706afe68bbbdb07fdefab76de8d176dfcb858ae8"));
 
-        //vSeeds.push_back(CDNSSeedData("testnet.raven-dark.com", "testnet.seed.raven-dark.com"));
-        //vSeeds.push_back(CDNSSeedData("fixed-seeds.raven-dark.com", "testnet.fixed-seeds.raven-dark.com"));
+        vSeeds.push_back(CDNSSeedData("testnet.raven-dark.com", "testnet.raven-dark.com"));
+        // vSeeds.push_back(CDNSSeedData("fixed-seeds.raven-dark.com", "testnet.fixed-seeds.raven-dark.com"));
         // vFixedSeeds.clear();
         // vSeeds.clear();
 
-        // Testnet RavenDark addresses start with 'A'
-        base58Prefixes[PUBKEY_ADDRESS] = std::vector<unsigned char>(1,24);
-        // Testnet RavenDark script addresses start with 'a'
-        base58Prefixes[SCRIPT_ADDRESS] = std::vector<unsigned char>(1,84);
-        // Testnet RavenDark private keys start with 't'
-        base58Prefixes[SECRET_KEY] =     std::vector<unsigned char>(1,24 + 128);
+        // RavenDark addresses start with 'R'
+        base58Prefixes[PUBKEY_ADDRESS] = std::vector<unsigned char>(1,61);
+        base58Prefixes[SCRIPT_ADDRESS] = std::vector<unsigned char>(1,121);
+        // RavenDark private keys start with 't'
+        base58Prefixes[SECRET_KEY] =     std::vector<unsigned char>(1,21 + 128);
         // Testnet RavenDark BIP32 pubkeys start with 'tpub' (RavenDark defaults)
         base58Prefixes[EXT_PUBLIC_KEY] = boost::assign::list_of(0x04)(0x35)(0x87)(0xCF).convert_to_container<std::vector<unsigned char> >();
         // Testnet RavenDark BIP32 prvkeys start with 'tprv' (RavenDark defaults)
@@ -357,7 +356,7 @@ public:
         consensus.nZawyLwmaAjustedWeight = 3927;
 
         consensus.nPowTargetTimespan = 30 * 60 * 2; // RavenDark: 1 hour
-        consensus.nPowTargetSpacing = 2 * 60; // RavenDark: 2 minutes
+        consensus.nPowTargetSpacing = 60; // RavenDark: 1 minute
         consensus.fPowAllowMinDifficultyBlocks = true;
         consensus.fPowNoRetargeting = true;
         consensus.useDarkGravityWave = false;
