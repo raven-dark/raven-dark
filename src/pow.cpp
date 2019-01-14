@@ -81,9 +81,9 @@ unsigned int GetNextWorkRequiredBTC(const CBlockIndex* pindexLast, const CBlockH
         if (params.fPowAllowMinDifficultyBlocks)
         {
             // Special difficulty rule for testnet:
-            // If the new block's timestamp is more than 2* 2.5 minutes
+            // If the new block's timestamp is more than 1.25 * 1 minute
             // then allow mining of a min-difficulty block.
-            if (pblock->GetBlockTime() > pindexLast->GetBlockTime() + params.nPowTargetSpacing*2)
+            if (pblock->GetBlockTime() > pindexLast->GetBlockTime() + params.nPowTargetSpacing*1.25)
                 return nProofOfWorkLimit;
             else
             {
@@ -119,10 +119,10 @@ unsigned int GetNextWorkRequired(const CBlockIndex* pindexLast, const CBlockHead
 unsigned int LwmaGetNextWorkRequired(const CBlockIndex* pindexLast, const CBlockHeader *pblock, const Consensus::Params& params)
 {
     // Special difficulty rule for testnet:
-    // If the new block's timestamp is more than 2 * 10 minutes
+    // If the new block's timestamp is more than 1.25 * 1 minutes
     // then allow mining of a min-difficulty block.
     if (params.fPowAllowMinDifficultyBlocks &&
-        pblock->GetBlockTime() > pindexLast->GetBlockTime() + params.nPowTargetSpacing * 2) {
+        pblock->GetBlockTime() > pindexLast->GetBlockTime() + params.nPowTargetSpacing * 1.25) {
         return UintToArith256(params.powLimit).GetCompact();
     }
     return LwmaCalculateNextWorkRequired(pindexLast, params);
@@ -138,7 +138,7 @@ unsigned int LwmaCalculateNextWorkRequired(const CBlockIndex* pindexLast, const 
     int N = params.nZawyLwmaAveragingWindow;
     const int k = params.nZawyLwmaAjustedWeight;
     const int height = pindexLast->nHeight + 1;
-    
+
     // For new coins
     if (pindexLast->nHeight <= 5) { return 1; }
     if (height <= N) { N = pindexLast->nHeight; } // prevent breaks
@@ -155,7 +155,7 @@ unsigned int LwmaCalculateNextWorkRequired(const CBlockIndex* pindexLast, const 
         int64_t solvetime = block->GetBlockTime() - block_Prev->GetBlockTime();
 
         if (solvetime > 7 * T) {
-    	    solvetime = 7 * T; 
+    	    solvetime = 7 * T;
     	}
     	if (solvetime < -(7 * T)) {
     	    solvetime = -(7 * T);
@@ -181,7 +181,7 @@ unsigned int LwmaCalculateNextWorkRequired(const CBlockIndex* pindexLast, const 
     if (next_target > pow_limit) {
         next_target = pow_limit;
     }
- 
+
     return next_target.GetCompact();
 }
 
