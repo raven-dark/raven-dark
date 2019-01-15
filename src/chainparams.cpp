@@ -245,9 +245,9 @@ public:
 
         // Adjustment for more accurate block times
         consensus.nPowTargetAdjustment = 2;
-        consensus.nPowTargetAdjustmentHeight = 250;
+        consensus.nPowTargetAdjustmentHeight = 550;
 
-        consensus.fPowAllowMinDifficultyBlocks = true;
+        consensus.fPowAllowMinDifficultyBlocks = false;
         consensus.fPowNoRetargeting = false;
         consensus.useDarkGravityWave = false;
         consensus.nRuleChangeActivationThreshold = 45; // 75% for testchains
