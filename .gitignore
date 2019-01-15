@@ -141,3 +141,6 @@ make
 .idea
 CMakeLists.txt
 cmake-build-debug
+
+#data dir
+data
