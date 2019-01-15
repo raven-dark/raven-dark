@@ -104,6 +104,11 @@ public:
 
         consensus.nPowTargetTimespan = 60 * 60; // RavenDark: 1 hour
         consensus.nPowTargetSpacing = 60; // RavenDark: 1 minute
+
+        // Adjustment for more accurate block times
+        consensus.nPowTargetAdjustment = 2;
+        consensus.nPowTargetAdjustmentHeight = 10000;
+
         consensus.fPowAllowMinDifficultyBlocks = false;
         consensus.fPowNoRetargeting = false;
         consensus.useDarkGravityWave = false;
@@ -236,7 +241,12 @@ public:
         consensus.nZawyLwmaAjustedWeight = 3927;
 
         consensus.nPowTargetTimespan = 60 * 30; // RavenDark: 30 minutes
-        consensus.nPowTargetSpacing = 30; // RavenDark: 30 seconds
+        consensus.nPowTargetSpacing = 60; // RavenDark: 60 seconds
+
+        // Adjustment for more accurate block times
+        consensus.nPowTargetAdjustment = 2;
+        consensus.nPowTargetAdjustmentHeight = 250;
+
         consensus.fPowAllowMinDifficultyBlocks = true;
         consensus.fPowNoRetargeting = false;
         consensus.useDarkGravityWave = false;
@@ -357,6 +367,11 @@ public:
 
         consensus.nPowTargetTimespan = 30 * 60 * 2; // RavenDark: 1 hour
         consensus.nPowTargetSpacing = 60; // RavenDark: 1 minute
+
+        // Adjustment for more accurate block times
+        consensus.nPowTargetAdjustment = 2;
+        consensus.nPowTargetAdjustmentHeight = 10000;
+
         consensus.fPowAllowMinDifficultyBlocks = true;
         consensus.fPowNoRetargeting = true;
         consensus.useDarkGravityWave = false;

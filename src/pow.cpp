@@ -81,9 +81,9 @@ unsigned int GetNextWorkRequiredBTC(const CBlockIndex* pindexLast, const CBlockH
         if (params.fPowAllowMinDifficultyBlocks)
         {
             // Special difficulty rule for testnet:
-            // If the new block's timestamp is more than 1.25 * 1 minute
+            // If the new block's timestamp is more than 1.5 * 1 minute
             // then allow mining of a min-difficulty block.
-            if (pblock->GetBlockTime() > pindexLast->GetBlockTime() + params.nPowTargetSpacing*1.25)
+            if (pblock->GetBlockTime() > pindexLast->GetBlockTime() + params.nPowTargetSpacing*1.5)
                 return nProofOfWorkLimit;
             else
             {
@@ -119,10 +119,10 @@ unsigned int GetNextWorkRequired(const CBlockIndex* pindexLast, const CBlockHead
 unsigned int LwmaGetNextWorkRequired(const CBlockIndex* pindexLast, const CBlockHeader *pblock, const Consensus::Params& params)
 {
     // Special difficulty rule for testnet:
-    // If the new block's timestamp is more than 1.25 * 1 minutes
+    // If the new block's timestamp is more than 1.5 * 1 minutes
     // then allow mining of a min-difficulty block.
     if (params.fPowAllowMinDifficultyBlocks &&
-        pblock->GetBlockTime() > pindexLast->GetBlockTime() + params.nPowTargetSpacing * 1.25) {
+        pblock->GetBlockTime() > pindexLast->GetBlockTime() + params.nPowTargetSpacing * 1.5) {
         return UintToArith256(params.powLimit).GetCompact();
     }
     return LwmaCalculateNextWorkRequired(pindexLast, params);
@@ -134,10 +134,16 @@ unsigned int LwmaCalculateNextWorkRequired(const CBlockIndex* pindexLast, const 
         return pindexLast->nBits;
     }
 
-    const int T = params.nPowTargetSpacing;
+    const int height = pindexLast->nHeight + 1;
+    int powAdjustment = 1;
+
+    if (height >= params.nPowTargetAdjustmentHeight) {
+      powAdjustment = params.nPowTargetAdjustment;
+    }
+
+    const int T = params.nPowTargetSpacing / powAdjustment;
     int N = params.nZawyLwmaAveragingWindow;
     const int k = params.nZawyLwmaAjustedWeight;
-    const int height = pindexLast->nHeight + 1;
 
     // For new coins
     if (pindexLast->nHeight <= 5) { return 1; }
