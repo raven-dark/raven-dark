@@ -136,7 +136,7 @@ unsigned int LwmaCalculateNextWorkRequired(const CBlockIndex* pindexLast, const 
 
   const int64_t T = params.nPowTargetSpacing;
   const int64_t N = params.nZawyLwmaAveragingWindow;
-  const int64_t k = (N * (N + 1) * T / 2) / (T * 10);
+  const int64_t k = (N * (N + 1) * T / 2);
   const int64_t height = pindexLast->nHeight;
   const arith_uint256 powLimit = UintToArith256(params.powLimit);
 

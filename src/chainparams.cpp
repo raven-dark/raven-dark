@@ -237,7 +237,7 @@ public:
         consensus.BIP34Hash = uint256S("0x0000047d24635e347be3aaaeb66c26be94901a2f962feccd4f95090191f208c1");
         consensus.powLimit = uint256S("00000fffff000000000000000000000000000000000000000000000000000000");
 
-        consensus.nZawyLwmaAveragingWindow = 45;
+        consensus.nZawyLwmaAveragingWindow = 183; // Consider 183 blocks to compute LWMA for PoW.
         consensus.nZawyLwmaAjustedWeight = 3927;
 
         consensus.nPowTargetTimespan = 60 * 30; // RavenDark: 30 minutes
