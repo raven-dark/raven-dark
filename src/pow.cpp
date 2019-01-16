@@ -130,65 +130,56 @@ unsigned int LwmaGetNextWorkRequired(const CBlockIndex* pindexLast, const CBlock
 
 unsigned int LwmaCalculateNextWorkRequired(const CBlockIndex* pindexLast, const Consensus::Params& params)
 {
-    if (params.fPowNoRetargeting) {
-        return pindexLast->nBits;
-    }
+  if (params.fPowNoRetargeting) {
+    return pindexLast->nBits;
+  }
 
-    const int height = pindexLast->nHeight + 1;
-    int powAdjustment = 1;
+  const int64_t T = params.nPowTargetSpacing;
+  const int64_t N = params.nZawyLwmaAveragingWindow;
+  const int64_t k = (N * (N + 1) * T / 2) / (T * 10);
+  const int64_t height = pindexLast->nHeight;
+  const arith_uint256 powLimit = UintToArith256(params.powLimit);
 
-    if (height >= params.nPowTargetAdjustmentHeight) {
-      powAdjustment = params.nPowTargetAdjustment;
-    }
+  if (height < N) { return powLimit.GetCompact(); } // get the chain started
 
-    const int T = params.nPowTargetSpacing / powAdjustment;
-    int N = params.nZawyLwmaAveragingWindow;
-    const int k = params.nZawyLwmaAjustedWeight;
+  arith_uint256 sumTarget, nextTarget;
+  int64_t thisTimestamp, previousTimestamp;
+  int64_t t = 0, j = 0;
 
-    // For new coins
-    if (pindexLast->nHeight <= 5) { return 1; }
-    if (height <= N) { N = pindexLast->nHeight; } // prevent breaks
+  // LWMA-3 jump rule
+  // arith_uint256 previousTarget = 0;
+  // int64_t sumLast3Solvetimes = 0;
 
-    assert(height > N);
+  const CBlockIndex* blockPreviousTimestamp = pindexLast->GetAncestor(height - N);
+  previousTimestamp = blockPreviousTimestamp->GetBlockTime();
 
-    arith_uint256 sum_target;
-    int t = 0, j = 0;
+  // Loop through N most recent blocks.
+  for (int64_t i = height - N + 1; i <= height; i++) {
+    const CBlockIndex* block = pindexLast->GetAncestor(i);
+    thisTimestamp = (block->GetBlockTime() > previousTimestamp) ?
+                      block->GetBlockTime() : previousTimestamp + 1;
 
-    // Loop through N most recent blocks.
-    for (int i = height - N; i < height; i++) {
-        const CBlockIndex* block = pindexLast->GetAncestor(i);
-        const CBlockIndex* block_Prev = block->GetAncestor(i - 1);
-        int64_t solvetime = block->GetBlockTime() - block_Prev->GetBlockTime();
+    int64_t solvetime = std::min(6 * T, thisTimestamp - previousTimestamp);
+    previousTimestamp = thisTimestamp;
 
-        if (solvetime > 7 * T) {
-    	    solvetime = 7 * T;
-    	}
-    	if (solvetime < -(7 * T)) {
-    	    solvetime = -(7 * T);
-    	}
+    j++;
+    t += solvetime * j; // weighted solvetime sum
+    arith_uint256 target;
+    target.SetCompact(block->nBits);
+    sumTarget += target / (k * N);
 
-        j++;
-        t +=  solvetime * j;
+    // LWMA-3 jump rule
+    // if (i > height - 3) { sumLast3Solvetimes += solvetime; }
+    // if (i === height) { previousTarget = target.SetCompact(block->nBits); }
+  }
+  nextTarget = t * sumTarget;
 
-        arith_uint256 target;
-        target.SetCompact(block->nBits);
-        sum_target += target / (k * N * N);
-    }
-    // Keep t reasonable in case strange solvetimes occurred.
-    // if (t < N * k / 3) {
-    //     t = N * k / 3;
-    // }
-    if (t < 1) {
-        t = 1;
-    }
+  // LWMA-3 jump rule, memory-less jump in diff. Approx 2x normal.
+  // if (sumLast3Solvetimes < (8 * T) / 10) { nextTarget = (previousTarget * 100) / (100 + (N * 26) / 200); }
 
-    const arith_uint256 pow_limit = UintToArith256(params.powLimit);
-    arith_uint256 next_target = t * sum_target;
-    if (next_target > pow_limit) {
-        next_target = pow_limit;
-    }
+  if (nextTarget > powLimit) { nextTarget = powLimit; }
 
-    return next_target.GetCompact();
+  return nextTarget.GetCompact();
 }
 
 // for DIFF_BTC only!
