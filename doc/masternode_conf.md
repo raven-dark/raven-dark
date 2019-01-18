@@ -28,14 +28,14 @@ The following RPC commands are available (type `help masternode` in Console for 
 * start-disabled
 * outputs
 -----
-Edit the ravendark.conf file on the vps with at least the following details:
-daemon=1
-masternode=1
-masternodeprivkey=masternode private key
-rpcallowip=127.0.0.1
-rpcuser=
-rpcpassword=
-externalip=VPS-IP:6666
+Edit the ravendark.conf file on the vps with at least the following details:\
+daemon=1\
+masternode=1\
+masternodeprivkey=masternode private key\
+rpcallowip=127.0.0.1\
+rpcuser=\
+rpcpassword=\
+externalip=VPS-IP:6666\
 
 Replace masternode private key and VPS-IP with your actual ones, and set a unique rpcuser/rpcpassword combo.
 
