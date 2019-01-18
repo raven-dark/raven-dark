@@ -40,10 +40,10 @@ externalip=VPS-IP:6666\
 Replace masternode private key and VPS-IP with your actual ones, and set a unique rpcuser/rpcpassword combo.
 
 Start the daemon with following:
-* ravendarkd 
+* ravendarkd \
 Check with these commands:
 * ravendark-cli getinfo
 * ravendark-cli mnsync status
 * ravendark-cli masternode status
-* tail -f .ravendarkcore/debug.log
+* tail -f .ravendarkcore/debug.log\
 (ctrl+x to stop the tail)
