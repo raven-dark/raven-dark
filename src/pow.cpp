@@ -134,10 +134,16 @@ unsigned int LwmaCalculateNextWorkRequired(const CBlockIndex* pindexLast, const 
     return pindexLast->nBits;
   }
 
+  const int64_t height = pindexLast->nHeight;
+
+  // old pow
+  if (height < params.nPowTargetAdjustmentHeight) {
+    return OldLwmaCalculateNextWorkRequired(pindexLast, params);
+  }
+
   const int64_t T = params.nPowTargetSpacing;
   const int64_t N = params.nZawyLwmaAveragingWindow;
   const int64_t k = (N * (N + 1) * T / 2);
-  const int64_t height = pindexLast->nHeight;
   const arith_uint256 powLimit = UintToArith256(params.powLimit);
 
   if (height < N) { return powLimit.GetCompact(); } // get the chain started
@@ -180,6 +186,63 @@ unsigned int LwmaCalculateNextWorkRequired(const CBlockIndex* pindexLast, const 
   if (nextTarget > powLimit) { nextTarget = powLimit; }
 
   return nextTarget.GetCompact();
+}
+
+unsigned int OldLwmaCalculateNextWorkRequired(const CBlockIndex* pindexLast, const Consensus::Params& params)
+{
+    if (params.fPowNoRetargeting) {
+        return pindexLast->nBits;
+    }
+
+    const int T = params.nPowTargetSpacing;
+    int N = params.nZawyLwmaAveragingWindow;
+    const int k = params.nZawyLwmaAjustedWeight;
+    const int height = pindexLast->nHeight + 1;
+
+    // For new coins
+    if (pindexLast->nHeight <= 5) { return 1; }
+    if (height <= N) { N = pindexLast->nHeight; } // prevent breaks
+
+    assert(height > N);
+
+    arith_uint256 sum_target;
+    int t = 0, j = 0;
+
+    // Loop through N most recent blocks.
+    for (int i = height - N; i < height; i++) {
+        const CBlockIndex* block = pindexLast->GetAncestor(i);
+        const CBlockIndex* block_Prev = block->GetAncestor(i - 1);
+        int64_t solvetime = block->GetBlockTime() - block_Prev->GetBlockTime();
+
+        if (solvetime > 7 * T) {
+    	    solvetime = 7 * T;
+    	}
+    	if (solvetime < -(7 * T)) {
+    	    solvetime = -(7 * T);
+    	}
+
+        j++;
+        t +=  solvetime * j;
+
+        arith_uint256 target;
+        target.SetCompact(block->nBits);
+        sum_target += target / (k * N * N);
+    }
+    // Keep t reasonable in case strange solvetimes occurred.
+    // if (t < N * k / 3) {
+    //     t = N * k / 3;
+    // }
+    if (t < 1) {
+        t = 1;
+    }
+
+    const arith_uint256 pow_limit = UintToArith256(params.powLimit);
+    arith_uint256 next_target = t * sum_target;
+    if (next_target > pow_limit) {
+        next_target = pow_limit;
+    }
+
+    return next_target.GetCompact();
 }
 
 // for DIFF_BTC only!

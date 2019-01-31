@@ -105,9 +105,8 @@ public:
         consensus.nPowTargetTimespan = 60 * 60; // RavenDark: 1 hour
         consensus.nPowTargetSpacing = 60; // RavenDark: 1 minute
 
-        // Adjustment for more accurate block times
-        consensus.nPowTargetAdjustment = 2;
-        consensus.nPowTargetAdjustmentHeight = 10000;
+        // Blocktime fix
+        consensus.nPowTargetAdjustmentHeight = 21666;
 
         consensus.fPowAllowMinDifficultyBlocks = false;
         consensus.fPowNoRetargeting = false;
@@ -243,9 +242,8 @@ public:
         consensus.nPowTargetTimespan = 60 * 30; // RavenDark: 30 minutes
         consensus.nPowTargetSpacing = 60; // RavenDark: 60 seconds
 
-        // Adjustment for more accurate block times
-        consensus.nPowTargetAdjustment = 2;
-        consensus.nPowTargetAdjustmentHeight = 415;
+        // Blocktime fix
+        consensus.nPowTargetAdjustmentHeight = 200;
 
         consensus.fPowAllowMinDifficultyBlocks = false;
         consensus.fPowNoRetargeting = false;
@@ -310,10 +308,10 @@ public:
 
         vFixedSeeds = std::vector<SeedSpec6>(pnSeed6_test, pnSeed6_test + ARRAYLEN(pnSeed6_test));
 
-        fMiningRequiresPeers = true;
+        fMiningRequiresPeers = false;
         fDefaultConsistencyChecks = false;
         fRequireStandard = false;
-        fMineBlocksOnDemand = false;
+        fMineBlocksOnDemand = true;
         fTestnetToBeDeprecatedFieldRPC = true;
 
         nPoolMaxTransactions = 3;
@@ -368,9 +366,8 @@ public:
         consensus.nPowTargetTimespan = 30 * 60 * 2; // RavenDark: 1 hour
         consensus.nPowTargetSpacing = 60; // RavenDark: 1 minute
 
-        // Adjustment for more accurate block times
-        consensus.nPowTargetAdjustment = 2;
-        consensus.nPowTargetAdjustmentHeight = 10000;
+        // Blocktime fix
+        consensus.nPowTargetAdjustmentHeight = 21666;
 
         consensus.fPowAllowMinDifficultyBlocks = true;
         consensus.fPowNoRetargeting = true;
