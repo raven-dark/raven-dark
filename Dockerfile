@@ -32,10 +32,9 @@ RUN apt-get install -y \
   libboost-test-dev \
   libboost-thread-dev
 
-ENV VERSION=0.2.1
-ENV RC=5
+ENV VERSION=0.3.0
 
-RUN git clone --branch blocktime-adjustment https://github.com/raven-dark/raven-dark.git ravendark
+RUN git clone https://github.com/raven-dark/raven-dark.git ravendark
 WORKDIR /ravendark
 
 RUN ./autogen.sh && \
@@ -46,9 +45,9 @@ RUN ln -sf /ravendark/src/ravendark-cli /usr/bin/ravendark-cli
 
 
 WORKDIR /ravendark/src
-RUN tar zcvf raven-dark-${VERSION}-ubuntu-rc${RC}.tar.gz ravendarkd ravendark-cli
+RUN tar zcvf raven-dark-${VERSION}-ubuntu.tar.gz ravendarkd ravendark-cli
 RUN mkdir -p /root/compressed
-RUN mv raven-dark-${VERSION}-ubuntu-rc${RC}.tar.gz /root/compressed
+RUN mv raven-dark-${VERSION}-ubuntu.tar.gz /root/compressed
 
 EXPOSE 6666 6665
 
