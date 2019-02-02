@@ -141,6 +141,11 @@ unsigned int LwmaCalculateNextWorkRequired(const CBlockIndex* pindexLast, const 
     return OldLwmaCalculateNextWorkRequired(pindexLast, params);
   }
 
+  // log that new pow is activated
+  if (height == params.nPowTargetAdjustmentHeight) {
+    LogPrintf("*** New POW method activated\n");
+  }
+
   const int64_t T = params.nPowTargetSpacing;
   const int64_t N = params.newZawyLwmaAveragingWindow;
   const int64_t k = (N * (N + 1) * T / 2);
