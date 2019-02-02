@@ -81,9 +81,9 @@ unsigned int GetNextWorkRequiredBTC(const CBlockIndex* pindexLast, const CBlockH
         if (params.fPowAllowMinDifficultyBlocks)
         {
             // Special difficulty rule for testnet:
-            // If the new block's timestamp is more than 1.25 * 1 minute
+            // If the new block's timestamp is more than 1.5 * 1 minute
             // then allow mining of a min-difficulty block.
-            if (pblock->GetBlockTime() > pindexLast->GetBlockTime() + params.nPowTargetSpacing*1.25)
+            if (pblock->GetBlockTime() > pindexLast->GetBlockTime() + params.nPowTargetSpacing*1.5)
                 return nProofOfWorkLimit;
             else
             {
@@ -119,16 +119,81 @@ unsigned int GetNextWorkRequired(const CBlockIndex* pindexLast, const CBlockHead
 unsigned int LwmaGetNextWorkRequired(const CBlockIndex* pindexLast, const CBlockHeader *pblock, const Consensus::Params& params)
 {
     // Special difficulty rule for testnet:
-    // If the new block's timestamp is more than 1.25 * 1 minutes
+    // If the new block's timestamp is more than 1.5 * 1 minutes
     // then allow mining of a min-difficulty block.
     if (params.fPowAllowMinDifficultyBlocks &&
-        pblock->GetBlockTime() > pindexLast->GetBlockTime() + params.nPowTargetSpacing * 1.25) {
+        pblock->GetBlockTime() > pindexLast->GetBlockTime() + params.nPowTargetSpacing * 1.5) {
         return UintToArith256(params.powLimit).GetCompact();
     }
     return LwmaCalculateNextWorkRequired(pindexLast, params);
 }
 
 unsigned int LwmaCalculateNextWorkRequired(const CBlockIndex* pindexLast, const Consensus::Params& params)
+{
+  if (params.fPowNoRetargeting) {
+    return pindexLast->nBits;
+  }
+
+  const int64_t height = pindexLast->nHeight;
+
+  // old pow
+  if (height < params.nPowTargetAdjustmentHeight) {
+    return OldLwmaCalculateNextWorkRequired(pindexLast, params);
+  }
+
+  // log that new pow is activated
+  if (height == params.nPowTargetAdjustmentHeight) {
+    LogPrintf("*** New POW method activated\n");
+  }
+
+  const int64_t T = params.nPowTargetSpacing;
+  const int64_t N = params.newZawyLwmaAveragingWindow;
+  const int64_t k = (N * (N + 1) * T / 2);
+  const arith_uint256 powLimit = UintToArith256(params.powLimit);
+
+  if (height < N) { return powLimit.GetCompact(); } // get the chain started
+
+  arith_uint256 sumTarget, nextTarget;
+  int64_t thisTimestamp, previousTimestamp;
+  int64_t t = 0, j = 0;
+
+  // LWMA-3 jump rule
+  // arith_uint256 previousTarget = 0;
+  // int64_t sumLast3Solvetimes = 0;
+
+  const CBlockIndex* blockPreviousTimestamp = pindexLast->GetAncestor(height - N);
+  previousTimestamp = blockPreviousTimestamp->GetBlockTime();
+
+  // Loop through N most recent blocks.
+  for (int64_t i = height - N + 1; i <= height; i++) {
+    const CBlockIndex* block = pindexLast->GetAncestor(i);
+    thisTimestamp = (block->GetBlockTime() > previousTimestamp) ?
+                      block->GetBlockTime() : previousTimestamp + 1;
+
+    int64_t solvetime = std::min(6 * T, thisTimestamp - previousTimestamp);
+    previousTimestamp = thisTimestamp;
+
+    j++;
+    t += solvetime * j; // weighted solvetime sum
+    arith_uint256 target;
+    target.SetCompact(block->nBits);
+    sumTarget += target / (k * N);
+
+    // LWMA-3 jump rule
+    // if (i > height - 3) { sumLast3Solvetimes += solvetime; }
+    // if (i === height) { previousTarget = target.SetCompact(block->nBits); }
+  }
+  nextTarget = t * sumTarget;
+
+  // LWMA-3 jump rule, memory-less jump in diff. Approx 2x normal.
+  // if (sumLast3Solvetimes < (8 * T) / 10) { nextTarget = (previousTarget * 100) / (100 + (N * 26) / 200); }
+
+  if (nextTarget > powLimit) { nextTarget = powLimit; }
+
+  return nextTarget.GetCompact();
+}
+
+unsigned int OldLwmaCalculateNextWorkRequired(const CBlockIndex* pindexLast, const Consensus::Params& params)
 {
     if (params.fPowNoRetargeting) {
         return pindexLast->nBits;

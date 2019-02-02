@@ -99,11 +99,16 @@ public:
         consensus.BIP34Hash = uint256S("0x000007d91d1254d60e2dd1ae580383070a4ddffa4c64c2eeb4a2f9ecc0414343");
         consensus.powLimit = uint256S("00000fffffffffffffffffffffffffffffffffffffffffffffffffffffffffff");
 
+        consensus.newZawyLwmaAveragingWindow = 183;
         consensus.nZawyLwmaAveragingWindow = 65;
         consensus.nZawyLwmaAjustedWeight = 3927;
 
         consensus.nPowTargetTimespan = 60 * 60; // RavenDark: 1 hour
         consensus.nPowTargetSpacing = 60; // RavenDark: 1 minute
+
+        // Blocktime fix
+        consensus.nPowTargetAdjustmentHeight = 22666;
+
         consensus.fPowAllowMinDifficultyBlocks = false;
         consensus.fPowNoRetargeting = false;
         consensus.useDarkGravityWave = false;
@@ -191,11 +196,12 @@ public:
 
         checkpointData = (CCheckpointData) {
             boost::assign::map_list_of
-            (0, uint256S("0000056e8fc8f3afd127c3ef59a3e397d8475ca00a9574da3cfaee0840258b0f")),
-            1546561220, // * UNIX timestamp of last checkpoint block
-            0,    // * total number of transactions between genesis and last checkpoint
+            (     0, uint256S("0x0000056e8fc8f3afd127c3ef59a3e397d8475ca00a9574da3cfaee0840258b0f"))
+            ( 19233, uint256S("0x000000000051d92fa549596f81cd1d357badbdb9bccd1f13ed5bd8644194607d")),
+            1549091494, // * UNIX timestamp of last checkpoint block
+            50607,    // * total number of transactions between genesis and last checkpoint
                   //   (the tx=... number in the SetBestChain debug.log lines)
-            86400   // * estimated number of transactions per day after checkpoint
+            8640   // * estimated number of transactions per day after checkpoint
         };
     }
 };
@@ -232,12 +238,16 @@ public:
         consensus.BIP34Hash = uint256S("0x0000047d24635e347be3aaaeb66c26be94901a2f962feccd4f95090191f208c1");
         consensus.powLimit = uint256S("00000fffff000000000000000000000000000000000000000000000000000000");
 
-        consensus.nZawyLwmaAveragingWindow = 45;
+        consensus.nZawyLwmaAveragingWindow = 183; // Consider 183 blocks to compute LWMA for PoW.
         consensus.nZawyLwmaAjustedWeight = 3927;
 
         consensus.nPowTargetTimespan = 60 * 30; // RavenDark: 30 minutes
-        consensus.nPowTargetSpacing = 30; // RavenDark: 30 seconds
-        consensus.fPowAllowMinDifficultyBlocks = true;
+        consensus.nPowTargetSpacing = 60; // RavenDark: 60 seconds
+
+        // Blocktime fix
+        consensus.nPowTargetAdjustmentHeight = 200;
+
+        consensus.fPowAllowMinDifficultyBlocks = false;
         consensus.fPowNoRetargeting = false;
         consensus.useDarkGravityWave = false;
         consensus.nRuleChangeActivationThreshold = 45; // 75% for testchains
@@ -352,11 +362,15 @@ public:
         consensus.BIP34Hash = uint256();
         consensus.powLimit = uint256S("7fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff");
 
-        consensus.nZawyLwmaAveragingWindow = 65;
+        consensus.nZawyLwmaAveragingWindow = 183;
         consensus.nZawyLwmaAjustedWeight = 3927;
 
         consensus.nPowTargetTimespan = 30 * 60 * 2; // RavenDark: 1 hour
         consensus.nPowTargetSpacing = 60; // RavenDark: 1 minute
+
+        // Blocktime fix
+        consensus.nPowTargetAdjustmentHeight = 22666;
+
         consensus.fPowAllowMinDifficultyBlocks = true;
         consensus.fPowNoRetargeting = true;
         consensus.useDarkGravityWave = false;

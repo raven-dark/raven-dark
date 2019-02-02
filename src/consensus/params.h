@@ -83,11 +83,13 @@ struct Params {
     bool useDarkGravityWave;
     int64_t nPowTargetSpacing;
     int64_t nPowTargetTimespan;
+    int64_t nPowTargetAdjustmentHeight;
     int64_t DifficultyAdjustmentInterval() const { return nPowTargetTimespan / nPowTargetSpacing; }
     uint256 nMinimumChainWork;
     uint256 defaultAssumeValid;
 
     // Params for Zawy's LWMA difficulty adjustment algorithm. (Used by testnet and regtest)
+    int64_t newZawyLwmaAveragingWindow;
     int64_t nZawyLwmaAveragingWindow;  // N = (0.5+40*(600/T)^0.3))
     int64_t nZawyLwmaAjustedWeight;  // k = (N+1)/2 * 0.9989^(500/N) * T
 };
