@@ -1,4 +1,4 @@
-RavenDark Core 0.3.0
+RavenDark Core 0.3.1
 ===============================
 
 
