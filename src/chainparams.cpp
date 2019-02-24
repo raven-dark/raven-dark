@@ -165,6 +165,11 @@ public:
         vSeeds.push_back(CDNSSeedData("seed0_ravendark", "seed.raven-dark.com"));
         vSeeds.push_back(CDNSSeedData("seed1_ravendark", "seed2.raven-dark.com"));
         vSeeds.push_back(CDNSSeedData("seed2_ravendark", "explorer.raven-dark.com"));
+        vSeeds.push_back(CDNSSeedData("seed2_ravendark", "13.250.104.161"));
+        vSeeds.push_back(CDNSSeedData("seed2_ravendark", "45.76.54.255"));
+        vSeeds.push_back(CDNSSeedData("seed2_ravendark", "35.212.129.236"));
+        vSeeds.push_back(CDNSSeedData("seed2_ravendark", "45.77.197.78"));
+        vSeeds.push_back(CDNSSeedData("seed2_ravendark", "52.59.232.205"));
         // vFixedSeeds.clear();
         // vSeeds.clear();
 
@@ -289,7 +294,7 @@ public:
         //assert(consensus.hashGenesisBlock == uint256S("0x0x8efde483cc07f2076b04d42f05ee6a12f0b5c57a058bd9e56635ff9794f42f78"));
         //assert(genesis.hashMerkleRoot == uint256S("0xd5dec0980d7b84cc1c048eb8706afe68bbbdb07fdefab76de8d176dfcb858ae8"));
 
-        vSeeds.push_back(CDNSSeedData("testnet.raven-dark.com", "testnet.raven-dark.com"));
+        vSeeds.push_back(CDNSSeedData("testnet.raven-dark.com", "34.227.142.15"));
         // vSeeds.push_back(CDNSSeedData("fixed-seeds.raven-dark.com", "testnet.fixed-seeds.raven-dark.com"));
         // vFixedSeeds.clear();
         // vSeeds.clear();
