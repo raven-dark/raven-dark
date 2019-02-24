@@ -84,6 +84,7 @@ libconftest.dylib*
 Makefile
 ravendark-qt
 ravendark-Qt.app
+ravendark-qt-*
 
 # Unit-tests
 Makefile.test

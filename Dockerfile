@@ -32,13 +32,13 @@ RUN apt-get install -y \
   libboost-test-dev \
   libboost-thread-dev
 
-ENV VERSION=0.3.0
+ENV VERSION=0.3.2
 
-RUN git clone https://github.com/raven-dark/raven-dark.git ravendark
 WORKDIR /ravendark
+COPY . .
 
 RUN ./autogen.sh && \
- ./configure --without-gui && make
+ ./configure --without-gui && make -j4
 
 RUN ln -sf /ravendark/src/ravendarkd /usr/bin/ravendarkd
 RUN ln -sf /ravendark/src/ravendark-cli /usr/bin/ravendark-cli
