@@ -32,7 +32,7 @@ RUN apt-get install -y \
   libboost-test-dev \
   libboost-thread-dev
 
-ENV VERSION=0.3.0
+ENV VERSION=0.3.1
 
 RUN git clone https://github.com/raven-dark/raven-dark.git ravendark
 WORKDIR /ravendark
