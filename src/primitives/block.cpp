@@ -5,14 +5,21 @@
 
 #include "primitives/block.h"
 
+#include "chainparams.h"
+#include "validation.h"
 #include "hash.h"
+#include "algo/hashx21s.h"
 #include "tinyformat.h"
 #include "utilstrencodings.h"
 #include "crypto/common.h"
 
 uint256 CBlockHeader::GetHash() const
 {
-    return HashX16R(BEGIN(nVersion), END(nNonce), hashPrevBlock);
+	uint32_t nTimeToUse = Params(ChainNameFromCommandLine()).GetConsensus().x21sForkTime;
+	if (nTime >= nTimeToUse) {
+		return HashX21S(BEGIN(nVersion), END(nNonce), hashPrevBlock);
+	}
+	return HashX16R(BEGIN(nVersion), END(nNonce), hashPrevBlock);
 }
 
 std::string CBlock::ToString() const

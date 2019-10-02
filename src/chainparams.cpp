@@ -155,6 +155,7 @@ public:
         nMaxTipAge = 6 * 60 * 60; // ~144 blocks behind -> 2 x fork detection time, was 24 * 60 * 60 in ravendark
         nDelayGetHeadersTime = 24 * 60 * 60;
         nPruneAfterHeight = 100000;
+        consensus.x21sForkTime = 1572566400;
 
         genesis = CreateGenesisBlock(1546561220, 444152, 0x1e0ffff0, 1, 200 * COIN);
         consensus.hashGenesisBlock = genesis.GetHash();
@@ -287,7 +288,7 @@ public:
         nMaxTipAge = 0x7fffffff; // allow mining on top of old blocks for testnet
         nDelayGetHeadersTime = 24 * 60 * 60;
         nPruneAfterHeight = 1000;
-
+        consensus.x21sForkTime = 1570406400;
         genesis = CreateGenesisBlock(1546561220, 444152, 0x1e0ffff0, 1, 200 * COIN);
 
         consensus.hashGenesisBlock = genesis.GetHash();
@@ -314,7 +315,7 @@ public:
 
         vFixedSeeds = std::vector<SeedSpec6>(pnSeed6_test, pnSeed6_test + ARRAYLEN(pnSeed6_test));
 
-        fMiningRequiresPeers = true;
+        fMiningRequiresPeers = false;
         fDefaultConsistencyChecks = false;
         fRequireStandard = false;
         fMineBlocksOnDemand = false;
@@ -404,6 +405,7 @@ public:
         nDelayGetHeadersTime = 0; // never delay GETHEADERS in regtests
         nDefaultPort = 17108;
         nPruneAfterHeight = 1000;
+        consensus.x21sForkTime = 1570407400;
 
         genesis = CreateGenesisBlock(1535284800, 1282268, 0x1e0ffff0, 1, 150000 * COIN);
         consensus.hashGenesisBlock = genesis.GetHash();
