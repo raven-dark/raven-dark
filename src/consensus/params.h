@@ -91,6 +91,8 @@ struct Params {
     // Params for Zawy's LWMA difficulty adjustment algorithm. (Used by testnet and regtest)
     int64_t nZawyLwmaAveragingWindow;  // N = (0.5+40*(600/T)^0.3))
     int64_t nZawyLwmaAjustedWeight;  // k = (N+1)/2 * 0.9989^(500/N) * T
+    uint32_t x21sForkTime;
+    uint32_t getX21sForkTime() const {return x21sForkTime; };
 };
 } // namespace Consensus
 
