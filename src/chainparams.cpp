@@ -155,7 +155,7 @@ public:
         nMaxTipAge = 6 * 60 * 60; // ~144 blocks behind -> 2 x fork detection time, was 24 * 60 * 60 in ravendark
         nDelayGetHeadersTime = 24 * 60 * 60;
         nPruneAfterHeight = 100000;
-        consensus.x21sForkTime = 1572566400;
+        consensus.x21sForkTime = 1571598831;
 
         genesis = CreateGenesisBlock(1546561220, 444152, 0x1e0ffff0, 1, 200 * COIN);
         consensus.hashGenesisBlock = genesis.GetHash();
@@ -286,16 +286,16 @@ public:
         vAlertPubKey = ParseHex("046666710fa689ad5023690c80f3a49c8f13f8d45b8c857fbcbc8bc4a8e4d3eb4b10f4d4604fa08dce601aaf0f470216fe1b51850b4acf21b179c45070ac7b03a9");
         nDefaultPort = 16666;
         nMaxTipAge = 0x7fffffff; // allow mining on top of old blocks for testnet
-        nDelayGetHeadersTime = 24 * 60 * 60;
+        nDelayGetHeadersTime = 0; // 24 * 60 * 60;
         nPruneAfterHeight = 1000;
-        consensus.x21sForkTime = 1570406400;
+        consensus.x21sForkTime = 1571200865;
         genesis = CreateGenesisBlock(1546561220, 444152, 0x1e0ffff0, 1, 200 * COIN);
 
         consensus.hashGenesisBlock = genesis.GetHash();
         //assert(consensus.hashGenesisBlock == uint256S("0x0x8efde483cc07f2076b04d42f05ee6a12f0b5c57a058bd9e56635ff9794f42f78"));
         //assert(genesis.hashMerkleRoot == uint256S("0xd5dec0980d7b84cc1c048eb8706afe68bbbdb07fdefab76de8d176dfcb858ae8"));
 
-        vSeeds.push_back(CDNSSeedData("testnet.raven-dark.com", "34.227.142.15"));
+        vSeeds.push_back(CDNSSeedData("testseed.raven-dark.com", "testseed.raven-dark.com"));
         // vSeeds.push_back(CDNSSeedData("fixed-seeds.raven-dark.com", "testnet.fixed-seeds.raven-dark.com"));
         // vFixedSeeds.clear();
         // vSeeds.clear();
