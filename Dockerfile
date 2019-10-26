@@ -38,7 +38,7 @@ WORKDIR /ravendark
 COPY . .
 
 RUN ./autogen.sh && \
- ./configure --without-gui && make -j4
+ ./configure --without-gui --enable-cxx --disable-shared --with-pic --prefix=$BDB_PREFIX CXXFLAGS="-fPIC" CPPFLAGS="-fPIC" && make -j4
 
 RUN ln -sf /ravendark/src/ravendarkd /usr/bin/ravendarkd
 RUN ln -sf /ravendark/src/ravendark-cli /usr/bin/ravendark-cli
@@ -49,9 +49,9 @@ RUN tar zcvf raven-dark-${VERSION}-ubuntu.tar.gz ravendarkd ravendark-cli
 RUN mkdir -p /root/compressed
 RUN mv raven-dark-${VERSION}-ubuntu.tar.gz /root/compressed
 
-EXPOSE 6666 6665
+EXPOSE 6666 6665 16666
 
 VOLUME /root/.ravendarkcore
 
-# CMD ravendarkd
-CMD tail -f /dev/null
+CMD ravendarkd
+# CMD tail -f /dev/null
