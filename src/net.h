@@ -9,6 +9,7 @@
 #include "addrdb.h"
 #include "addrman.h"
 #include "bloom.h"
+#include "chainparams.h"
 #include "compat.h"
 #include "limitedmap.h"
 #include "netaddress.h"
@@ -306,7 +307,7 @@ public:
 
     void RelayTransaction(const CTransaction& tx);
     void RelayTransaction(const CTransaction& tx, const CDataStream& ss);
-    void RelayInv(CInv &inv, const int minProtoVersion = MIN_PEER_PROTO_VERSION);
+    void RelayInv(CInv &inv, const int minProtoVersion = Params().GetConsensus().x21sForkTime);
 
     // Addrman functions
     size_t GetAddressCount() const;
