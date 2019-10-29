@@ -32,22 +32,23 @@ RUN apt-get install -y \
   libboost-test-dev \
   libboost-thread-dev
 
-ENV VERSION=0.3.2
+ENV VERSION=0.4.2
 
 WORKDIR /ravendark
 COPY . .
 
 RUN ./autogen.sh && \
- ./configure --without-gui --enable-cxx --disable-shared --with-pic --prefix=$BDB_PREFIX CXXFLAGS="-fPIC" CPPFLAGS="-fPIC" && make -j4
+ ./configure --without-gui --enable-cxx --disable-shared --with-pic --prefix=$BDB_PREFIX CXXFLAGS="-fPIC" CPPFLAGS="-fPIC" && \
+ make clean && make -j4
 
 RUN ln -sf /ravendark/src/ravendarkd /usr/bin/ravendarkd
 RUN ln -sf /ravendark/src/ravendark-cli /usr/bin/ravendark-cli
 
 
 WORKDIR /ravendark/src
-RUN tar zcvf raven-dark-${VERSION}-ubuntu.tar.gz ravendarkd ravendark-cli
+RUN tar zcvf raven-dark-${VERSION}-ubuntu-trusty.tar.gz ravendarkd ravendark-cli
 RUN mkdir -p /root/compressed
-RUN mv raven-dark-${VERSION}-ubuntu.tar.gz /root/compressed
+RUN mv raven-dark-${VERSION}-ubuntu-trusty.tar.gz /root/compressed
 
 EXPOSE 6666 6665 16666
 

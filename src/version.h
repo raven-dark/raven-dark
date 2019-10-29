@@ -10,7 +10,7 @@
  * network protocol versioning
  */
 
-static const int PROTOCOL_VERSION = 70208;
+static const int PROTOCOL_VERSION = 70209;
 
 //! initial proto version, to be increased after version/verack negotiation
 static const int INIT_PROTO_VERSION = 209;
@@ -19,7 +19,16 @@ static const int INIT_PROTO_VERSION = 209;
 static const int GETHEADERS_VERSION = 70077;
 
 //! disconnect from peers older than this proto version
-static const int MIN_PEER_PROTO_VERSION = 70208;
+int MIN_PEER_PROTO_VERSION = 70208;
+//! disconnect from peers older than this after x21s fork
+static const int MIN_PEER_PROTO_VERSION_FORK_X21S = 70209;
+int MinProtoVersion(int64_t nTime, int64_t x21sForkTime) {
+  if (nTime > x21sForkTime) {
+    MIN_PEER_PROTO_VERSION = MIN_PEER_PROTO_VERSION_FORK_X21S; // TODO: hack. see line 309 of net.h
+    return MIN_PEER_PROTO_VERSION_FORK_X21S;
+  }
+  return MIN_PEER_PROTO_VERSION;
+};
 
 //! nTime field added to CAddress, starting with this version;
 //! if possible, avoid requesting addresses nodes older than this
