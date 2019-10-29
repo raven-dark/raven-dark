@@ -22,7 +22,7 @@ static const int GETHEADERS_VERSION = 70077;
 static const int MIN_PEER_PROTO_VERSION = 70208;
 //! disconnect from peers older than this after x21s fork
 static const int MIN_PEER_PROTO_VERSION_FORK_X21S = 70209;
-int MinProtoVersion(int64_t nTime, int64_t x21sForkTime) {
+static int MinProtoVersion(int64_t nTime, int64_t x21sForkTime) {
   if (nTime > x21sForkTime) {
     return MIN_PEER_PROTO_VERSION_FORK_X21S;
   }
