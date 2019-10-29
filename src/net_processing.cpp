@@ -1078,6 +1078,7 @@ bool static ProcessMessage(CNode* pfrom, string strCommand, CDataStream& vRecv, 
 {
     const CChainParams& chainparams = Params();
     RandAddSeedPerfmon();
+    int currentProtoVersion = MinProtoVersion(nTimeReceived, chainparams.GetConsensus().x21sForkTime);
 
     LogPrint("net", "received: %s (%u bytes) peer=%d\n", SanitizeString(strCommand), vRecv.size(), pfrom->id);
 
@@ -1100,6 +1101,15 @@ bool static ProcessMessage(CNode* pfrom, string strCommand, CDataStream& vRecv, 
             pfrom->fDisconnect = true;
             return false;
         }
+    }
+
+    if (pfrom->nVersion !=0 & pfrom->nVersion < currentProtoVersion) {
+      // disconnect from peers older than this proto version
+      LogPrintf("ProcessMessage: peer=%d using obsolete version %i; disconnecting\n", pfrom->id, pfrom->nVersion);
+      connman.PushMessageWithVersion(pfrom, INIT_PROTO_VERSION, NetMsgType::REJECT, strCommand, REJECT_OBSOLETE,
+                         strprintf("Version must be %d or greater", currentProtoVersion));
+      pfrom->fDisconnect = true;
+      return false;
     }
 
 
@@ -1148,7 +1158,6 @@ bool static ProcessMessage(CNode* pfrom, string strCommand, CDataStream& vRecv, 
             return false;
         }
 
-        int currentProtoVersion = MinProtoVersion(nTime, Params().GetConsensus().x21sForkTime);
         if (nVersion < currentProtoVersion)
         {
             // disconnect from peers older than this proto version
