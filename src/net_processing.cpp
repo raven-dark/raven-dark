@@ -1080,8 +1080,7 @@ bool static ProcessMessage(CNode* pfrom, string strCommand, CDataStream& vRecv, 
     RandAddSeedPerfmon();
     int64_t nTimeReceivedSeconds = nTimeReceived / (int64_t)1000000;
     int currentProtoVersion = MinProtoVersion(nTimeReceivedSeconds, chainparams.GetConsensus().x21sForkTime);
-    LogPrintf("current proto version: %d time received: %d x21sForkTime: %d\n", currentProtoVersion, nTimeReceivedSeconds, chainparams.GetConsensus().x21sForkTime);
-
+    // LogPrint("net", "current proto version: %d time received: %d x21sForkTime: %d\n", currentProtoVersion, nTimeReceivedSeconds, chainparams.GetConsensus().x21sForkTime);
     LogPrint("net", "received: %s (%u bytes) peer=%d\n", SanitizeString(strCommand), vRecv.size(), pfrom->id);
 
     if (mapArgs.count("-dropmessagestest") && GetRand(atoi(mapArgs["-dropmessagestest"])) == 0)
