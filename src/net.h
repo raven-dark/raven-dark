@@ -307,7 +307,7 @@ public:
 
     void RelayTransaction(const CTransaction& tx);
     void RelayTransaction(const CTransaction& tx, const CDataStream& ss);
-    void RelayInv(CInv &inv, const int minProtoVersion = Params().GetConsensus().x21sForkTime);
+    void RelayInv(CInv &inv, const int64_t forkTime = Params().GetConsensus().x21sForkTime);
 
     // Addrman functions
     size_t GetAddressCount() const;

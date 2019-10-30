@@ -2525,10 +2525,12 @@ void CConnman::RelayTransaction(const CTransaction& tx, const CDataStream& ss)
     }
 }
 
-void CConnman::RelayInv(CInv &inv, const int minProtoVersion) {
+void CConnman::RelayInv(CInv &inv, const int64_t forkTime) {
+    int64_t nNow = GetTime();
+    int currentProtoVersion = MinProtoVersion(nNow, forkTime);
     LOCK(cs_vNodes);
     BOOST_FOREACH(CNode* pnode, vNodes)
-        if(pnode->nVersion >= minProtoVersion)
+        if(pnode->nVersion >= currentProtoVersion)
             pnode->PushInventory(inv);
 }
 
