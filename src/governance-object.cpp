@@ -2,6 +2,7 @@
 // Distributed under the MIT/X11 software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
+#include "chainparams.h"
 #include "core_io.h"
 #include "governance.h"
 #include "governance-classes.h"
@@ -659,7 +660,7 @@ void CGovernanceObject::Relay(CConnman& connman)
     }
 
     CInv inv(MSG_GOVERNANCE_OBJECT, GetHash());
-    connman.RelayInv(inv, MIN_GOVERNANCE_PEER_PROTO_VERSION);
+    connman.RelayInv(inv, Params().GetConsensus().x21sForkTime);
 }
 
 void CGovernanceObject::UpdateSentinelVariables()

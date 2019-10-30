@@ -2,6 +2,7 @@
 // Distributed under the MIT/X11 software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
+#include "chainparams.h"
 #include "governance-vote.h"
 #include "governance-object.h"
 #include "masternode-sync.h"
@@ -234,7 +235,7 @@ void CGovernanceVote::Relay(CConnman& connman) const
     }
 
     CInv inv(MSG_GOVERNANCE_OBJECT_VOTE, GetHash());
-    connman.RelayInv(inv, MIN_GOVERNANCE_PEER_PROTO_VERSION);
+    connman.RelayInv(inv, Params().GetConsensus().x21sForkTime);
 }
 
 bool CGovernanceVote::Sign(CKey& keyMasternode, CPubKey& pubKeyMasternode)

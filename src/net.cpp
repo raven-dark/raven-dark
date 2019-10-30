@@ -14,6 +14,7 @@
 #include "chainparams.h"
 #include "clientversion.h"
 #include "consensus/consensus.h"
+#include "consensus/params.h"
 #include "crypto/common.h"
 #include "hash.h"
 #include "primitives/transaction.h"
@@ -1692,9 +1693,9 @@ void CConnman::ThreadOpenConnections()
         //  * Increase the number of connectable addresses in the tried table.
         //
         // Method:
-        //  * Choose a random address from new and attempt to connect to it if we can connect 
+        //  * Choose a random address from new and attempt to connect to it if we can connect
         //    successfully it is added to tried.
-        //  * Start attempting feeler connections only after node finishes making outbound 
+        //  * Start attempting feeler connections only after node finishes making outbound
         //    connections.
         //  * Only make a feeler connection once every few minutes.
         //
@@ -1892,7 +1893,7 @@ bool CConnman::OpenNetworkConnection(const CAddress& addrConnect, CSemaphoreGran
     }
     if (!fNetworkActive) {
         return false;
-    }	
+    }
     if (!pszDest) {
         if (IsLocal(addrConnect) ||
             FindNode((CNetAddr)addrConnect) || IsBanned(addrConnect) ||
@@ -2524,10 +2525,12 @@ void CConnman::RelayTransaction(const CTransaction& tx, const CDataStream& ss)
     }
 }
 
-void CConnman::RelayInv(CInv &inv, const int minProtoVersion) {
+void CConnman::RelayInv(CInv &inv, const int64_t forkTime) {
+    int64_t nNow = GetTime();
+    int currentProtoVersion = MinProtoVersion(nNow, forkTime);
     LOCK(cs_vNodes);
     BOOST_FOREACH(CNode* pnode, vNodes)
-        if(pnode->nVersion >= minProtoVersion)
+        if(pnode->nVersion >= currentProtoVersion)
             pnode->PushInventory(inv);
 }
 
