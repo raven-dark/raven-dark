@@ -3,10 +3,12 @@
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
 #include "activemasternode.h"
+#include "chainparams.h"
 #include "masternode.h"
 #include "masternode-sync.h"
 #include "masternodeman.h"
 #include "protocol.h"
+#include "version.h"
 
 // Keep track of the active Masternode
 CActiveMasternode activeMasternode;
@@ -197,13 +199,15 @@ void CActiveMasternode::ManageStateInitial(CConnman& connman)
 
 void CActiveMasternode::ManageStateRemote()
 {
-    LogPrint("masternode", "CActiveMasternode::ManageStateRemote -- Start status = %s, type = %s, pinger enabled = %d, pubKeyMasternode.GetID() = %s\n", 
+    LogPrint("masternode", "CActiveMasternode::ManageStateRemote -- Start status = %s, type = %s, pinger enabled = %d, pubKeyMasternode.GetID() = %s\n",
              GetStatus(), GetTypeString(), fPingerEnabled, pubKeyMasternode.GetID().ToString());
 
     mnodeman.CheckMasternode(pubKeyMasternode, true);
     masternode_info_t infoMn;
+    int64_t nNow = GetTime();
+    int currentProtoVersion = MinProtoVersion(nNow, Params().GetConsensus().x21sForkTime);
     if(mnodeman.GetMasternodeInfo(pubKeyMasternode, infoMn)) {
-        if(infoMn.nProtocolVersion != PROTOCOL_VERSION) {
+        if(infoMn.nProtocolVersion != currentProtoVersion) {
             nState = ACTIVE_MASTERNODE_NOT_CAPABLE;
             strNotCapableReason = "Invalid protocol version";
             LogPrintf("CActiveMasternode::ManageStateRemote -- %s: %s\n", GetStateString(), strNotCapableReason);
